@@ -88,3 +88,116 @@ whether it works.
 <script src="script.js"></script>
 </body>
 </html>
+<!-- Add this where you want the "Choose a tile type" UI to appear -->
+<div class="tile-picker" role="radiogroup" aria-label="Choose tile type">
+  <button type="button" class="tile-button" data-tile="wall" role="radio" aria-checked="false" title="Wall">
+    <span class="tile-preview wall" aria-hidden="true"></span>
+    <span class="tile-label">Wall</span>
+  </button>
+
+  <button type="button" class="tile-button" data-tile="floor" role="radio" aria-checked="false" title="Floor">
+    <span class="tile-preview floor" aria-hidden="true"></span>
+    <span class="tile-label">Floor</span>
+  </button>
+
+  <button type="button" class="tile-button" data-tile="start" role="radio" aria-checked="false" title="Start">
+    <span class="tile-preview start" aria-hidden="true"></span>
+    <span class="tile-label">Start</span>
+  </button>
+
+  <button type="button" class="tile-button" data-tile="end" role="radio" aria-checked="false" title="End">
+    <span class="tile-preview end" aria-hidden="true"></span>
+    <span class="tile-label">End</span>
+  </button>
+</div>
+
+<!-- Include the CSS and JS below or in separate files -->
+<style>
+.tile-picker {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin:0.5rem 0;
+}
+.tile-button {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border:1px solid #bbb;
+  background:#fff;
+  border-radius:6px;
+  cursor:pointer;
+  user-select:none;
+  font:inherit;
+}
+.tile-button .tile-preview {
+  width:28px;
+  height:28px;
+  border-radius:4px;
+  border:1px solid rgba(0,0,0,0.12);
+}
+.tile-preview.wall { background:#333; }
+.tile-preview.floor { background:#ddd; }
+.tile-preview.start { background:linear-gradient(45deg,#4caf50,#8bc34a); }
+.tile-preview.end { background:linear-gradient(45deg,#f44336,#ff9800); }
+
+.tile-button:focus {
+  outline:3px solid rgba(21,156,228,0.35);
+  outline-offset:2px;
+}
+.tile-button.selected {
+  border-color:#156be6;
+  background:#eef6ff;
+}
+.tile-label {
+  white-space:nowrap;
+}
+</style>
+
+<script>
+(function () {
+  const picker = document.querySelector('.tile-picker');
+  if (!picker) return;
+
+  function selectTile(tile) {
+    const buttons = picker.querySelectorAll('.tile-button');
+    buttons.forEach(b => {
+      const isSelected = b.dataset.tile === tile;
+      b.classList.toggle('selected', isSelected);
+      b.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+    });
+    // Expose the selected tile and emit an event so your code can react
+    window.selectedTile = tile;
+    picker.dispatchEvent(new CustomEvent('tilechange', { detail: { tile } }));
+  }
+
+  // Initialize and attach handlers
+  picker.querySelectorAll('.tile-button').forEach(btn => {
+    btn.addEventListener('click', () => selectTile(btn.dataset.tile));
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        btn.click();
+      }
+      // Optional: arrow key navigation
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = btn.nextElementSibling || picker.querySelector('.tile-button:first-child');
+        next && next.focus();
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = btn.previousElementSibling || picker.querySelector('.tile-button:last-child');
+        prev && prev.focus();
+      }
+    });
+  });
+
+  // Optionally set a default selection (change "floor" to whatever you prefer)
+  selectTile('floor');
+
+  // Example: how to listen from your maze code:
+  // document.querySelector('.tile-picker').addEventListener('tilechange', e => console.log('tile chosen', e.detail.tile));
+})();
+</script>
