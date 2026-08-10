@@ -504,4 +504,39 @@ createTools();
 loadStarterLevel();
 renderBoard();
 renderSavedLevels();
-       
+const tileSize = 32;
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+function getMousePos(evt){
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+    y: (evt.clientY - rect.top) * (canvas.height / rect.height)
+  };
+}
+
+canvas.addEventListener('click', (evt) => {
+  const pos = getMousePos(evt);
+  const tx = Math.floor(pos.x / tileSize);
+  const ty = Math.floor(pos.y / tileSize);
+  selectTile(tx, ty);
+});
+
+let selected = null;
+function selectTile(tx, ty){
+  selected = {tx, ty};
+  // e.g., toggle a tile type, or open a palette
+  // tiles[ty][tx] = newTileType;
+  draw();
+}
+
+function draw(){
+  // draw tiles...
+  // highlight selected
+  if(selected){
+    ctx.strokeStyle = 'yellow';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(selected.tx * tileSize, selected.ty * tileSize, tileSize, tileSize);
+  }
+}       
