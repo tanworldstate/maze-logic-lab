@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Maze Logic Lab</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="hero">
+<div>
+<p class="eyebrow">Logic + JavaScript Challenge</p>
+<h1>Maze Logic Lab</h1>
+<p>
+Build a puzzle map, then ask the solver to find a route that follows the
+rules:
+walls block movement, doors need keys, traps cost extra energy, and coins
+may be required.
+</p>
+</div>
+</header>
+<main class="layout">
+<section class="panel builder-panel">
+<h2>1. Build the map</h2>
+<p class="hint">Choose a tile type, then click cells on the board.</p>
+<div class="tool-grid" id="toolGrid"></div>
+<div class="options-grid">
+<label>
+Energy budget
+<input id="energyInput" type="number" min="1" max="99" value="24" />
+</label>
+<label class="checkbox-row">
+<input id="requireCoinsInput" type="checkbox" />
+Require all coins before goal
+</label>
+</div>
+<div class="button-row">
+<button id="solveBtn">Solve Maze</button>
+<button id="animateBtn">Animate Path</button>
+<button id="randomBtn" class="secondary">Random Level</button>
+<button id="resetBtn" class="secondary">Reset</button>
+</div>
+<div class="status-card" id="statusCard">
+Make a level, then click <strong>Solve Maze</strong>.
+</div>
+</section>
+<section class="board-wrap">
+<div class="board-header">
+<h2>2. Puzzle board</h2>
+<p id="boardStats">8 x 8 grid</p>
+</div>
 
+Maze Logic Lab - Advanced Coding Exercise Page 22
+
+<div id="board" class="board" aria-label="Maze board"></div>
+</section>
+<section class="panel explanation-panel">
+<h2>3. Solver explanation</h2>
+<p class="hint">
+The solver uses breadth-first search. It does not only remember location.
+It remembers a full state: row, column, key status, coins collected, and
+energy left.
+</p>
+<ol id="explanationList" class="explanation-list"></ol>
+</section>
+<section class="panel levels-panel">
+<h2>4. Save and share levels</h2>
+<div class="save-row">
+<input id="levelNameInput" type="text" placeholder="Level name" />
+<button id="saveBtn">Save Level</button>
+</div>
+<div id="savedLevels" class="saved-levels"></div>
+<label class="textarea-label">
+Import / Export JSON
+<textarea id="jsonBox" rows="6" placeholder="Exported level JSON appears
+here."></textarea>
+</label>
+<div class="button-row">
+<button id="exportBtn" class="secondary">Export Current Level</button>
+<button id="importBtn" class="secondary">Import From Box</button>
+</div>
+</section>
+</main>
+<footer>
+<p>
+Challenge goal: explain why the solver's chosen route is valid, not just
+whether it works.
+</p>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
